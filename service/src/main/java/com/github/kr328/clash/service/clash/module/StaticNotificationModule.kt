@@ -11,7 +11,9 @@ import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
 import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.constants.Intents
+import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.service.R
+import com.github.kr328.clash.service.ModeActionReceiver
 import com.github.kr328.clash.service.StatusProvider
 import kotlinx.coroutines.channels.Channel
 
@@ -46,6 +48,12 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
             val notification = builder
                 .setContentTitle(profileName)
                 .setContentText(service.getText(R.string.running))
+                .addAction(0, service.getText(R.string.direct_mode),
+                    createModeIntent(service, TunnelState.Mode.Direct))
+                .addAction(0, service.getText(R.string.rule_mode),
+                    createModeIntent(service, TunnelState.Mode.Rule))
+                .addAction(0, service.getText(R.string.global_mode),
+                    createModeIntent(service, TunnelState.Mode.Global))
                 .build()
 
             service.startForegroundCompat(R.id.nf_clash_status, notification)
@@ -76,6 +84,18 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
                     .build()
 
             service.startForegroundCompat(R.id.nf_clash_status, notification)
+        }
+
+        fun createModeIntent(service: Service, mode: TunnelState.Mode): PendingIntent {
+            val intent = Intent(Intents.ACTION_SWITCH_MODE)
+                .setClass(service, ModeActionReceiver::class.java)
+                .putExtra(Intents.EXTRA_MODE, mode.name)
+            return PendingIntent.getBroadcast(
+                service,
+                mode.ordinal,
+                intent,
+                pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT)
+            )
         }
     }
 }

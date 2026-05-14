@@ -21,5 +21,5 @@ val ValidatorHttpUrl: Validator = {
 }
 
 val ValidatorAutoUpdateInterval: Validator = {
-    it.isEmpty() || (it.toLongOrNull() ?: 0) >= 15
+    it.isEmpty() || (it.toLongOrNull() ?: -1) >= 0
 }

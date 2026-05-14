@@ -18,4 +18,7 @@
     <string name="provider_files">Provider Files</string>
     <string name="profile_updater">Profile Updater</string>
     <string name="profile_updating">Profile Updating</string>
+    <string name="direct_mode">Direct Mode</string>
+    <string name="rule_mode">Rule Mode</string>
+    <string name="global_mode">Global Mode</string>
 </resources>

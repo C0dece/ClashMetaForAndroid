@@ -64,7 +64,7 @@
 
     <string name="accept_http_content">Accept only http(s)</string>
     <string name="at_least_15_minutes">At least 15 minutes or empty</string>
-    <string name="at_least_15_seconds">At least 15 seconds or empty</string>
+    <string name="at_least_15_seconds">Seconds (empty = disabled)</string>
     <string name="should_not_be_blank">Should not be blank</string>
     <string name="detail">Detail</string>
     <string name="update">Update</string>

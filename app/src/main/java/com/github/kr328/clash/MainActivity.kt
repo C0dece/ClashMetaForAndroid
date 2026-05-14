@@ -22,6 +22,7 @@ import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.core.bridge.*
+import com.github.kr328.clash.core.Clash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
@@ -46,7 +47,8 @@ class MainActivity : BaseActivity<MainDesign>() {
                         Event.ActivityStart,
                         Event.ServiceRecreated,
                         Event.ClashStop, Event.ClashStart,
-                        Event.ProfileLoaded, Event.ProfileChanged -> design.fetch()
+                        Event.ProfileLoaded, Event.ProfileChanged,
+                        Event.OverrideChanged -> design.fetch()
                         else -> Unit
                     }
                 }
@@ -77,6 +79,13 @@ class MainActivity : BaseActivity<MainDesign>() {
                             startActivity(HelpActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             design.showAbout(queryAppVersionName())
+                        is MainDesign.Request.SwitchMode -> {
+                            withClash {
+                                val o = queryOverride(Clash.OverrideSlot.Session)
+                                o.mode = it.mode
+                                patchOverride(Clash.OverrideSlot.Session, o)
+                            }
+                        }
                     }
                 }
                 if (clashRunning) {

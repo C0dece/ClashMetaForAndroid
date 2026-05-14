@@ -14,15 +14,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
-    enum class Request {
-        ToggleStatus,
-        OpenProxy,
-        OpenProfiles,
-        OpenProviders,
-        OpenLogs,
-        OpenSettings,
-        OpenHelp,
-        OpenAbout,
+    sealed class Request {
+        object ToggleStatus : Request()
+        object OpenProxy : Request()
+        object OpenProfiles : Request()
+        object OpenProviders : Request()
+        object OpenLogs : Request()
+        object OpenSettings : Request()
+        object OpenHelp : Request()
+        object OpenAbout : Request()
+        data class SwitchMode(val mode: TunnelState.Mode) : Request()
     }
 
     private val binding = DesignMainBinding
@@ -57,6 +58,14 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                 TunnelState.Mode.Rule -> context.getString(R.string.rule_mode)
                 else -> context.getString(R.string.rule_mode)
             }
+
+            val checkedId = when (mode) {
+                TunnelState.Mode.Direct -> R.id.modeDirect
+                TunnelState.Mode.Rule -> R.id.modeRule
+                TunnelState.Mode.Global -> R.id.modeGlobal
+                else -> R.id.modeRule
+            }
+            binding.modeSwitcher.check(checkedId)
         }
     }
 
@@ -83,9 +92,52 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
         binding.colorClashStarted = context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
         binding.colorClashStopped = context.resolveThemedColor(R.attr.colorClashStopped)
+
+        binding.modeSwitcher.addOnButtonCheckedListener { _: com.google.android.material.button.MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            val mode = when (checkedId) {
+                com.github.kr328.clash.design.R.id.modeDirect -> TunnelState.Mode.Direct
+                com.github.kr328.clash.design.R.id.modeRule -> TunnelState.Mode.Rule
+                com.github.kr328.clash.design.R.id.modeGlobal -> TunnelState.Mode.Global
+                else -> return@addOnButtonCheckedListener
+            }
+            request(Request.SwitchMode(mode))
+        }
     }
 
     fun request(request: Request) {
         requests.trySend(request)
+    }
+
+    fun toggleStatus() {
+        request(Request.ToggleStatus)
+    }
+
+    fun openProxy() {
+        request(Request.OpenProxy)
+    }
+
+    fun openProfiles() {
+        request(Request.OpenProfiles)
+    }
+
+    fun openProviders() {
+        request(Request.OpenProviders)
+    }
+
+    fun openLogs() {
+        request(Request.OpenLogs)
+    }
+
+    fun openSettings() {
+        request(Request.OpenSettings)
+    }
+
+    fun openHelp() {
+        request(Request.OpenHelp)
+    }
+
+    fun openAbout() {
+        request(Request.OpenAbout)
     }
 }

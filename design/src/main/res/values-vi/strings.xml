@@ -39,7 +39,7 @@
     <string name="application_broken_tips">Ứng dụng thiếu các thành phần cần thiết, nguyên nhân thường là do tải xuống apk không đầy đủ.</string>
     <string name="application_crashed">Ứng dụng bị dừng</string>
     <string name="at_least_15_minutes">Ít nhất 15 phút hoặc để trống</string>
-    <string name="at_least_15_seconds">Ít nhất 15 giây hoặc để trống</string>
+    <string name="at_least_15_seconds">Giây (để trống = tắt)</string>
     <string name="authentication">Xác thực</string>
     <string name="auto_restart">Khởi động lại tự động</string>
     <string name="auto_update">Thời gian tự động cập nhật</string>

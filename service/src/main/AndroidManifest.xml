@@ -85,5 +85,13 @@
                 <data android:scheme="uuid" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".ModeActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="${applicationId}.intent.action.SWITCH_MODE" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

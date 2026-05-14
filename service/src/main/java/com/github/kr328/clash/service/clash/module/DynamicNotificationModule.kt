@@ -13,9 +13,11 @@ import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.core.Clash
+import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficDownload
 import com.github.kr328.clash.core.util.trafficUpload
 import com.github.kr328.clash.service.R
+import com.github.kr328.clash.service.ModeActionReceiver
 import com.github.kr328.clash.service.StatusProvider
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -43,6 +45,18 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
 
     private val notificationManager = NotificationManagerCompat.from(service)
 
+    private fun createModeIntent(mode: TunnelState.Mode): PendingIntent {
+        val intent = Intent(Intents.ACTION_SWITCH_MODE)
+            .setClass(service, ModeActionReceiver::class.java)
+            .putExtra(Intents.EXTRA_MODE, mode.name)
+        return PendingIntent.getBroadcast(
+            service,
+            mode.ordinal,
+            intent,
+            pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT)
+        )
+    }
+
     private fun update() {
         val now = Clash.queryTrafficNow()
         val total = Clash.queryTrafficTotal()
@@ -65,6 +79,12 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
                     uploaded, downloaded
                 )
             )
+            .addAction(0, service.getText(R.string.direct_mode),
+                createModeIntent(TunnelState.Mode.Direct))
+            .addAction(0, service.getText(R.string.rule_mode),
+                createModeIntent(TunnelState.Mode.Rule))
+            .addAction(0, service.getText(R.string.global_mode),
+                createModeIntent(TunnelState.Mode.Global))
             .build()
 
         notificationManager.notify(R.id.nf_clash_status, notification)

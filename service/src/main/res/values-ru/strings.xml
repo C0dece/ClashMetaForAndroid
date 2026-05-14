@@ -18,4 +18,7 @@
     <string name="provider_files">Файлы провайдера</string>
     <string name="profile_updater">Обновление профиля</string>
     <string name="profile_updating">Профиль обновляется</string>
+    <string name="direct_mode">Прямой режим</string>
+    <string name="rule_mode">Режим правил</string>
+    <string name="global_mode">Глобальный режим</string>
 </resources>

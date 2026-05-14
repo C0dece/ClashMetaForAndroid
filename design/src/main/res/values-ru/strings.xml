@@ -58,7 +58,7 @@
 
     <string name="accept_http_content">Принимать только http(s)</string>
     <string name="at_least_15_minutes">Не менее 15 минут или пустой</string>
-    <string name="at_least_15_seconds">Не менее 15 секунд или пустой</string>
+    <string name="at_least_15_seconds">Секунды (пусто = отключено)</string>
     <string name="should_not_be_blank">Не должно быть пустым</string>
     <string name="detail">Детали</string>
     <string name="update">Обновить</string>

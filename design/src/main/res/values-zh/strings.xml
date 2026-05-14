@@ -107,7 +107,7 @@
     <string name="service">服务</string>
     <string name="accept_http_content">仅接受 http(s) 和 content 类型</string>
     <string name="at_least_15_minutes">至少 15 分钟</string>
-    <string name="at_least_15_seconds">至少 15 秒</string>
+    <string name="at_least_15_seconds">秒数（空 = 禁用）</string>
     <string name="override">覆写</string>
     <string name="general">常规</string>
     <string name="dns">DNS</string>

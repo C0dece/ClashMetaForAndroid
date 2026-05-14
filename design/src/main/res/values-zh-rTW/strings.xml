@@ -102,7 +102,7 @@
     <string name="service">服務</string>
     <string name="accept_http_content">僅接受 http(s) 和 content 類型</string>
     <string name="at_least_15_minutes">至少 15 分鐘</string>
-    <string name="at_least_15_seconds">至少 15 秒</string>
+    <string name="at_least_15_seconds">秒數（空 = 禁用）</string>
     <string name="override">覆寫</string>
     <string name="general">一般</string>
     <string name="dns">DNS</string>

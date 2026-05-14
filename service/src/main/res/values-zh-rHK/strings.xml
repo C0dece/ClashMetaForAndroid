@@ -16,4 +16,7 @@
     <string name="profile_updating">配置更新中</string>
     <string name="profile_service_status">配置文件服務狀態</string>
     <string name="profile_process_result">配置文件處理結果</string>
+    <string name="direct_mode">直接模式</string>
+    <string name="rule_mode">規則模式</string>
+    <string name="global_mode">全域模式</string>
 </resources>

@@ -281,9 +281,6 @@ object ProfileProcessor {
 
             source.isNotEmpty() && scheme != "https" && scheme != "http" && scheme != "content" ->
                 throw IllegalArgumentException("Unsupported url $source")
-
-            interval != 0L && TimeUnit.MILLISECONDS.toSeconds(interval) < 15 ->
-                throw IllegalArgumentException("Invalid interval")
         }
     }
 }
