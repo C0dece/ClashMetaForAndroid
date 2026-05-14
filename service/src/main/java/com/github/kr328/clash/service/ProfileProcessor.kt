@@ -209,9 +209,11 @@ object ProfileProcessor {
                         val newConfigFile = context.processingDir.resolve("config.yaml")
                         val oldConfigFile = importedPath.resolve("config.yaml")
 
-                        val contentChanged = !oldConfigFile.exists() ||
-                            !newConfigFile.exists() ||
+                        val contentChanged = if (oldConfigFile.exists() && newConfigFile.exists()) {
                             !newConfigFile.readBytes().contentEquals(oldConfigFile.readBytes())
+                        } else {
+                            true
+                        }
 
                         if (contentChanged) {
                             importedPath.deleteRecursively()
