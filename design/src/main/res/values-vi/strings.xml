@@ -39,10 +39,12 @@
     <string name="application_broken_tips">Ứng dụng thiếu các thành phần cần thiết, nguyên nhân thường là do tải xuống apk không đầy đủ.</string>
     <string name="application_crashed">Ứng dụng bị dừng</string>
     <string name="at_least_15_minutes">Ít nhất 15 phút hoặc để trống</string>
+    <string name="at_least_15_seconds">Ít nhất 15 giây hoặc để trống</string>
     <string name="authentication">Xác thực</string>
     <string name="auto_restart">Khởi động lại tự động</string>
     <string name="auto_update">Thời gian tự động cập nhật</string>
     <string name="auto_update_minutes">Tự động cập nhật (Phút)</string>
+    <string name="auto_update_seconds">Tự động cập nhật (Giây)</string>
     <string name="behavior">Điều hướng</string>
     <string name="bind_address">Địa chỉ ràng buộc</string>
     <string name="block_loopback">Chặn lặp</string>
@@ -106,6 +108,7 @@
     <string name="format_fetching_provider">Nhà cung cấp tìm nạp \'%s\'</string>
     <string name="format_hours_ago">%d giờ trước</string>
     <string name="format_minutes">%d phút</string>
+    <string name="format_seconds">%d giây</string>
     <string name="format_minutes_ago">%d phút trước</string>
     <string name="format_months_ago">%d tháng trước</string>
     <string name="format_profile_activated">%s đang sử dụng</string>

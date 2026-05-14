@@ -29,6 +29,7 @@
     <string name="recently">Recently</string>
 
     <string name="format_minutes">%d min</string>
+    <string name="format_seconds">%d sec</string>
     <string name="format_elements">%d elements</string>
 
     <string name="format_minutes_ago">%d min ago</string>
@@ -59,9 +60,11 @@
     <string name="profile_url">Profile URL</string>
     <string name="auto_update">Auto Update</string>
     <string name="auto_update_minutes">Auto Update (Minutes)</string>
+    <string name="auto_update_seconds">Auto Update (Seconds)</string>
 
     <string name="accept_http_content">Accept only http(s)</string>
     <string name="at_least_15_minutes">At least 15 minutes or empty</string>
+    <string name="at_least_15_seconds">At least 15 seconds or empty</string>
     <string name="should_not_be_blank">Should not be blank</string>
     <string name="detail">Detail</string>
     <string name="update">Update</string>

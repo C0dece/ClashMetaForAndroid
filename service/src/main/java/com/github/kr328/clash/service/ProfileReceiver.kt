@@ -81,7 +81,7 @@ class ProfileReceiver : BroadcastReceiver() {
 
             context.getSystemService<AlarmManager>()?.cancel(intent)
 
-            if (imported.interval < TimeUnit.MINUTES.toMillis(15))
+            if (imported.interval < TimeUnit.SECONDS.toMillis(15))
                 return
 
             val current = System.currentTimeMillis()

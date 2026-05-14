@@ -123,17 +123,17 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
 
     fun inputInterval() {
         launch {
-            var minutes = TimeUnit.MILLISECONDS.toMinutes(profile.interval)
+            var seconds = TimeUnit.MILLISECONDS.toSeconds(profile.interval)
 
-            minutes = context.requestModelTextInput(
-                initial = if (minutes == 0L) "" else minutes.toString(),
+            seconds = context.requestModelTextInput(
+                initial = if (seconds == 0L) "" else seconds.toString(),
                 title = context.getText(R.string.auto_update),
-                hint = context.getText(R.string.auto_update_minutes),
-                error = context.getText(R.string.at_least_15_minutes),
+                hint = context.getText(R.string.auto_update_seconds),
+                error = context.getText(R.string.at_least_15_seconds),
                 validator = ValidatorAutoUpdateInterval
             ).toLongOrNull() ?: 0
 
-            val interval = TimeUnit.MINUTES.toMillis(minutes)
+            val interval = TimeUnit.SECONDS.toMillis(seconds)
 
             if (interval != profile.interval) {
                 profile = profile.copy(interval = interval)

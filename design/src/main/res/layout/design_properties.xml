@@ -84,8 +84,8 @@
                     android:onClick="@{() -> self.inputInterval()}"
                     app:enabled="@{profile.type != Type.File}"
                     app:icon="@drawable/ic_outline_update"
-                    app:placeholder="@string/at_least_15_minutes"
-                    app:text="@{profile.interval == 0 ? @string/disabled : @string/format_minutes(profile.interval / 1000 / 60)}"
+                    app:placeholder="@string/at_least_15_seconds"
+                    app:text="@{profile.interval == 0 ? @string/disabled : @string/format_seconds(profile.interval / 1000)}"
                     app:title="@string/auto_update" />
 
                 <com.github.kr328.clash.design.view.ActionLabel

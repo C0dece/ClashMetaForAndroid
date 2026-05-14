@@ -19,6 +19,7 @@
     <string name="copied">복사됨</string>
     <string name="recently">최근</string>
     <string name="format_minutes">%d 분</string>
+    <string name="format_seconds">%d 초</string>
     <string name="format_elements">%d 개 항목</string>
     <string name="format_minutes_ago">%d 분 전</string>
     <string name="format_hours_ago">%d 시간 전</string>
@@ -44,8 +45,10 @@
     <string name="profile_url">구성 URL</string>
     <string name="auto_update">자동 업데이트</string>
     <string name="auto_update_minutes">자동 업데이트 (분)</string>
+    <string name="auto_update_seconds">자동 업데이트 (초)</string>
     <string name="accept_http_content">http(s) 연결만 허용</string>
     <string name="at_least_15_minutes">최소 15분 이상 또는 공백</string>
+    <string name="at_least_15_seconds">최소 15초 이상 또는 공백</string>
     <string name="should_not_be_blank">이 필드는 공백이 허용되지 않습니다.</string>
     <string name="detail">자세히</string>
     <string name="update">업데이트</string>

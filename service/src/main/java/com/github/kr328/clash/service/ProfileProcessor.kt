@@ -111,7 +111,7 @@ object ProfileProcessor {
                                         if (intervalHours != null) {
                                             updateInterval = if (intervalHours > 0) {
                                                 java.util.concurrent.TimeUnit.HOURS.toMillis(intervalHours)
-                                                    .coerceAtLeast(java.util.concurrent.TimeUnit.MINUTES.toMillis(15))
+                                                    .coerceAtLeast(java.util.concurrent.TimeUnit.SECONDS.toMillis(15))
                                             } else {
                                                 0L
                                             }
@@ -205,11 +205,21 @@ object ProfileProcessor {
 
                 profileLock.withLock {
                     if (ImportedDao().exists(snapshot.uuid)) {
-                        context.importedDir.resolve(snapshot.uuid.toString()).deleteRecursively()
-                        context.processingDir
-                            .copyRecursively(context.importedDir.resolve(snapshot.uuid.toString()))
+                        val importedPath = context.importedDir.resolve(snapshot.uuid.toString())
+                        val newConfigFile = context.processingDir.resolve("config.yaml")
+                        val oldConfigFile = importedPath.resolve("config.yaml")
 
-                        context.sendProfileChanged(snapshot.uuid)
+                        val contentChanged = !oldConfigFile.exists() ||
+                            !newConfigFile.exists() ||
+                            !newConfigFile.readBytes().contentEquals(oldConfigFile.readBytes())
+
+                        if (contentChanged) {
+                            importedPath.deleteRecursively()
+                            context.processingDir
+                                .copyRecursively(importedPath)
+
+                            context.sendProfileChanged(snapshot.uuid)
+                        }
                     }
                 }
             }
@@ -270,7 +280,7 @@ object ProfileProcessor {
             source.isNotEmpty() && scheme != "https" && scheme != "http" && scheme != "content" ->
                 throw IllegalArgumentException("Unsupported url $source")
 
-            interval != 0L && TimeUnit.MILLISECONDS.toMinutes(interval) < 15 ->
+            interval != 0L && TimeUnit.MILLISECONDS.toSeconds(interval) < 15 ->
                 throw IllegalArgumentException("Invalid interval")
         }
     }
