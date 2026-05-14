@@ -83,7 +83,7 @@ class ProfileWorker : BaseService() {
         val imported = ImportedDao().queryByUUID(uuid) ?: return
 
         try {
-            processing(imported.name) {
+            processing {
                 ProfileProcessor.update(this, imported.uuid, null)
             }
 
@@ -127,29 +127,8 @@ class ProfileWorker : BaseService() {
         startForegroundCompat(R.id.nf_profile_worker, notification)
     }
 
-    private suspend inline fun processing(name: String, block: () -> Unit) {
-        val id = UndefinedIds.next()
-
-        val notification = NotificationCompat.Builder(this, STATUS_CHANNEL)
-            .setContentTitle(getString(R.string.profile_updating))
-            .setContentText(name)
-            .setColor(getColorCompat(R.color.color_clash))
-            .setSmallIcon(R.drawable.ic_logo_service)
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setGroup(STATUS_CHANNEL)
-            .build()
-
-        NotificationManagerCompat.from(applicationContext)
-            .notify(id, notification)
-        try {
-            block()
-        } finally {
-            withContext(NonCancellable) {
-                NotificationManagerCompat.from(applicationContext)
-                    .cancel(id)
-            }
-        }
+    private suspend inline fun processing(block: () -> Unit) {
+        block()
     }
 
     private fun resultBuilder(id: Int, uuid: UUID): NotificationCompat.Builder {
