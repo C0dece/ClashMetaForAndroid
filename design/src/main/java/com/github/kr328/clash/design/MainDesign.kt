@@ -29,6 +29,8 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     private val binding = DesignMainBinding
         .inflate(context.layoutInflater, context.root, false)
 
+    private var programmaticModeUpdate = false
+
     override val root: View
         get() = binding.root
 
@@ -65,7 +67,9 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                 TunnelState.Mode.Global -> R.id.modeGlobal
                 else -> R.id.modeRule
             }
+            programmaticModeUpdate = true
             binding.modeSwitcher.check(checkedId)
+            programmaticModeUpdate = false
         }
     }
 
@@ -94,7 +98,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         binding.colorClashStopped = context.resolveThemedColor(R.attr.colorClashStopped)
 
         binding.modeSwitcher.addOnButtonCheckedListener { _: com.google.android.material.button.MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean ->
-            if (!isChecked) return@addOnButtonCheckedListener
+            if (!isChecked || programmaticModeUpdate) return@addOnButtonCheckedListener
             val mode = when (checkedId) {
                 com.github.kr328.clash.design.R.id.modeDirect -> TunnelState.Mode.Direct
                 com.github.kr328.clash.design.R.id.modeRule -> TunnelState.Mode.Rule
