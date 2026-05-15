@@ -185,8 +185,10 @@ object ProfileProcessor {
                     context.processingDir.deleteRecursively()
                     context.processingDir.mkdirs()
 
-                    context.importedDir.resolve(imported.uuid.toString())
-                        .copyRecursively(context.processingDir, overwrite = true)
+                    val importedPath = context.importedDir.resolve(imported.uuid.toString())
+                    if (importedPath.exists()) {
+                        importedPath.copyRecursively(context.processingDir, overwrite = true)
+                    }
 
                     imported
                 }
