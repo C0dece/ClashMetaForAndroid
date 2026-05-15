@@ -97,45 +97,68 @@
                     app:subtext="@{mode}"
                     app:text="@string/proxy" />
 
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/modeSwitcher"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/modeCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/main_card_margin_vertical"
-                    android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}"
-                    app:singleSelection="true"
-                    app:selectionRequired="true">
+                    android:layout_marginVertical="@dimen/main_card_margin_vertical"
+                    app:cardCornerRadius="@dimen/large_action_card_radius"
+                    app:cardElevation="@dimen/large_action_card_elevation"
+                    app:cardBackgroundColor="?attr/colorSurface"
+                    app:strokeWidth="0dp">
 
-                    <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:id="@+id/modeDirect"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingHorizontal="4dp"
-                        android:text="@string/direct_mode" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/large_action_card_min_height"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:id="@+id/modeRule"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingHorizontal="4dp"
-                        android:text="@string/rule_mode" />
+                        <TextView
+                            android:id="@+id/modeDirect"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="12sp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/direct_mode" />
 
-                    <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:id="@+id/modeGlobal"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingHorizontal="4dp"
-                        android:text="@string/global_mode" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#20FFFFFF" />
+
+                        <TextView
+                            android:id="@+id/modeRule"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="12sp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/rule_mode" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#20FFFFFF" />
+
+                        <TextView
+                            android:id="@+id/modeGlobal"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="12sp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/global_mode" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.github.kr328.clash.design.view.LargeActionCard
                     android:layout_width="match_parent"

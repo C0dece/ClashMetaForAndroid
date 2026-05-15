@@ -42,6 +42,9 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
                 pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT)
             )
         )
+        .addAction(0, service.getText(R.string.direct_mode), createModeIntent(TunnelState.Mode.Direct))
+        .addAction(0, service.getText(R.string.rule_mode), createModeIntent(TunnelState.Mode.Rule))
+        .addAction(0, service.getText(R.string.global_mode), createModeIntent(TunnelState.Mode.Global))
 
     private val notificationManager = NotificationManagerCompat.from(service)
 
@@ -79,12 +82,6 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
                     uploaded, downloaded
                 )
             )
-            .addAction(0, service.getText(R.string.direct_mode),
-                createModeIntent(TunnelState.Mode.Direct))
-            .addAction(0, service.getText(R.string.rule_mode),
-                createModeIntent(TunnelState.Mode.Rule))
-            .addAction(0, service.getText(R.string.global_mode),
-                createModeIntent(TunnelState.Mode.Global))
             .build()
 
         notificationManager.notify(R.id.nf_clash_status, notification)

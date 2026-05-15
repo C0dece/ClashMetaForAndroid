@@ -34,6 +34,9 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
                 pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT)
             )
         )
+        .addAction(0, service.getText(R.string.direct_mode), createModeIntent(service, TunnelState.Mode.Direct))
+        .addAction(0, service.getText(R.string.rule_mode), createModeIntent(service, TunnelState.Mode.Rule))
+        .addAction(0, service.getText(R.string.global_mode), createModeIntent(service, TunnelState.Mode.Global))
 
     override suspend fun run() {
         val loaded = receiveBroadcast(capacity = Channel.CONFLATED) {
@@ -48,12 +51,6 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
             val notification = builder
                 .setContentTitle(profileName)
                 .setContentText(service.getText(R.string.running))
-                .addAction(0, service.getText(R.string.direct_mode),
-                    createModeIntent(service, TunnelState.Mode.Direct))
-                .addAction(0, service.getText(R.string.rule_mode),
-                    createModeIntent(service, TunnelState.Mode.Rule))
-                .addAction(0, service.getText(R.string.global_mode),
-                    createModeIntent(service, TunnelState.Mode.Global))
                 .build()
 
             service.startForegroundCompat(R.id.nf_clash_status, notification)

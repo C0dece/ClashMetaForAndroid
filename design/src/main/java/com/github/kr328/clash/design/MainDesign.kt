@@ -1,6 +1,7 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
+import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.github.kr328.clash.core.model.TunnelState
@@ -28,8 +29,6 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     private val binding = DesignMainBinding
         .inflate(context.layoutInflater, context.root, false)
-
-    private var programmaticModeUpdate = false
 
     override val root: View
         get() = binding.root
@@ -61,15 +60,11 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                 else -> context.getString(R.string.rule_mode)
             }
 
-            val checkedId = when (mode) {
-                TunnelState.Mode.Direct -> R.id.modeDirect
-                TunnelState.Mode.Rule -> R.id.modeRule
-                TunnelState.Mode.Global -> R.id.modeGlobal
-                else -> R.id.modeRule
-            }
-            programmaticModeUpdate = true
-            binding.modeSwitcher.check(checkedId)
-            programmaticModeUpdate = false
+            val selected = context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
+            val deselected = Color.TRANSPARENT
+            binding.modeDirect.setBackgroundColor(if (mode == TunnelState.Mode.Direct) selected else deselected)
+            binding.modeRule.setBackgroundColor(if (mode == TunnelState.Mode.Rule) selected else deselected)
+            binding.modeGlobal.setBackgroundColor(if (mode == TunnelState.Mode.Global) selected else deselected)
         }
     }
 
@@ -97,16 +92,9 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         binding.colorClashStarted = context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
         binding.colorClashStopped = context.resolveThemedColor(R.attr.colorClashStopped)
 
-        binding.modeSwitcher.addOnButtonCheckedListener { _: com.google.android.material.button.MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean ->
-            if (!isChecked || programmaticModeUpdate) return@addOnButtonCheckedListener
-            val mode = when (checkedId) {
-                com.github.kr328.clash.design.R.id.modeDirect -> TunnelState.Mode.Direct
-                com.github.kr328.clash.design.R.id.modeRule -> TunnelState.Mode.Rule
-                com.github.kr328.clash.design.R.id.modeGlobal -> TunnelState.Mode.Global
-                else -> return@addOnButtonCheckedListener
-            }
-            request(Request.SwitchMode(mode))
-        }
+        binding.modeDirect.setOnClickListener { request(Request.SwitchMode(TunnelState.Mode.Direct)) }
+        binding.modeRule.setOnClickListener { request(Request.SwitchMode(TunnelState.Mode.Rule)) }
+        binding.modeGlobal.setOnClickListener { request(Request.SwitchMode(TunnelState.Mode.Global)) }
     }
 
     fun request(request: Request) {
