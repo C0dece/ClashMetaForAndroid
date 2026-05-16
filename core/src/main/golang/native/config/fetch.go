@@ -13,8 +13,6 @@ import (
 	"time"
 
 	"cfa/native/app"
-
-	clashHttp "github.com/metacubex/mihomo/component/http"
 )
 
 type Status struct {
@@ -24,14 +22,39 @@ type Status struct {
 	MaxProgress int      `json:"max"`
 }
 
+var fetchClient = &http.Client{}
+
 func openUrl(ctx context.Context, url string) (io.ReadCloser, error) {
-	response, err := clashHttp.HttpRequest(ctx, url, http.MethodGet, http.Header{"User-Agent": {"ClashMetaForAndroid/" + app.VersionName()}}, nil)
+	var lastErr error
+	for i := 0; i < 3; i++ {
+		if i > 0 {
+			select {
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			case <-time.After(time.Duration(i) * time.Second):
+			}
+		}
 
-	if err != nil {
-		return nil, err
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err != nil {
+			return nil, err
+		}
+		req.Header.Set("User-Agent", "ClashMetaForAndroid/"+app.VersionName())
+
+		resp, err := fetchClient.Do(req)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			resp.Body.Close()
+			return nil, fmt.Errorf("request failed with status: %s", resp.Status)
+		}
+
+		return resp.Body, nil
 	}
-
-	return response.Body, nil
+	return nil, lastErr
 }
 
 func openContent(url string) (io.ReadCloser, error) {
