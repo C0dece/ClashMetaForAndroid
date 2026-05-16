@@ -21,6 +21,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.File
 import java.math.BigDecimal
 import java.net.URL
 import java.util.*
@@ -177,20 +178,29 @@ object ProfileProcessor {
 
     suspend fun update(context: Context, uuid: UUID, callback: IFetchObserver?) {
         withContext(NonCancellable) {
-            processLock.withLock {
+            processLock.withLock processLock@{
                 val snapshot = profileLock.withLock {
-                    val imported = ImportedDao().queryByUUID(uuid)
+                    ImportedDao().queryByUUID(uuid)
                         ?: throw IllegalArgumentException("profile $uuid not found")
+                }
 
+                if (snapshot.type == Profile.Type.Url) {
+                    val existingConfig = context.importedDir
+                        .resolve(snapshot.uuid.toString())
+                        .resolve("config.yaml")
+                    if (existingConfig.exists() && preCheckUnchanged(context, snapshot.source, existingConfig)) {
+                        return@processLock
+                    }
+                }
+
+                profileLock.withLock {
                     context.processingDir.deleteRecursively()
                     context.processingDir.mkdirs()
 
-                    val importedPath = context.importedDir.resolve(imported.uuid.toString())
+                    val importedPath = context.importedDir.resolve(snapshot.uuid.toString())
                     if (importedPath.exists()) {
                         importedPath.copyRecursively(context.processingDir, overwrite = true)
                     }
-
-                    imported
                 }
 
                 var cb = callback
@@ -227,6 +237,28 @@ object ProfileProcessor {
                     }
                 }
             }
+        }
+    }
+
+    private fun preCheckUnchanged(context: Context, url: String, existingFile: File): Boolean {
+        return try {
+            val versionName = context.packageManager
+                .getPackageInfo(context.packageName, 0).versionName
+            val client = OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build()
+            val request = Request.Builder()
+                .url(url)
+                .header("User-Agent", "ClashMetaForAndroid/$versionName")
+                .build()
+            val newBytes = client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) null
+                else response.body?.bytes()
+            } ?: return false
+            existingFile.readBytes().contentEquals(newBytes)
+        } catch (e: Exception) {
+            false
         }
     }
 

@@ -170,7 +170,7 @@ class ProfileWorker : BaseService() {
     }
 
     companion object {
-        private const val SERVICE_CHANNEL = "profile_service_channel"
+        private const val SERVICE_CHANNEL = "profile_service_channel_v2"
         private const val STATUS_CHANNEL = "profile_status_channel"
         private const val RESULT_CHANNEL = "profile_result_channel"
     }
