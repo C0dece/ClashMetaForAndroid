@@ -6,6 +6,7 @@ import android.content.Intent
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.TunnelState
+import com.github.kr328.clash.service.util.sendOverrideChanged
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ class ModeActionReceiver : BroadcastReceiver() {
                 val override = Clash.queryOverride(Clash.OverrideSlot.Session)
                 override.mode = mode
                 Clash.patchOverride(Clash.OverrideSlot.Session, override)
+                context.sendOverrideChanged()
             } finally {
                 pending.finish()
             }

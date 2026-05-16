@@ -12,7 +12,6 @@ import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
 import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.id.UndefinedIds
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.service.data.ImportedDao
@@ -153,7 +152,7 @@ class ProfileWorker : BaseService() {
     }
 
     private fun failed(uuid: UUID, name: String, reason: String) {
-        val id = UndefinedIds.next()
+        val id = uuid.hashCode()
 
         val content = getString(R.string.format_update_failure, name, reason)
 
