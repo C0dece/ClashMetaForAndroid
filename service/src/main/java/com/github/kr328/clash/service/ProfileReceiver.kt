@@ -13,13 +13,16 @@ import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.common.util.setUUID
+import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.service.data.Imported
 import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.service.util.importedDir
+import com.github.kr328.clash.service.util.sendProfileUpdateCompleted
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 class ProfileReceiver : BroadcastReceiver() {
@@ -37,11 +40,47 @@ class ProfileReceiver : BroadcastReceiver() {
                 }
             }
             Intents.ACTION_PROFILE_REQUEST_UPDATE -> {
-                val redirect = intent.setComponent(ProfileWorker::class.componentName)
+                val uuid = intent.uuid
 
-                context.startForegroundServiceCompat(redirect)
+                if (uuid == null) {
+                    context.startForegroundServiceCompat(
+                        intent.setComponent(ProfileWorker::class.componentName)
+                    )
+
+                    return
+                }
+
+                val pending = goAsync()
+
+                Global.launch {
+                    try {
+                        val imported = ImportedDao().queryByUUID(uuid)
+
+                        if (imported != null && ProfileProcessor.isConfigUnchanged(context, uuid)) {
+                            scheduleNext(context, imported)
+
+                            context.sendProfileUpdateCompleted(uuid)
+                        } else {
+                            startUpdateWorker(context, uuid)
+                        }
+                    } catch (e: Exception) {
+                        Log.w("Profile update pre-check: $e", e)
+
+                        startUpdateWorker(context, uuid)
+                    } finally {
+                        pending.finish()
+                    }
+                }
             }
         }
+    }
+
+    private fun startUpdateWorker(context: Context, uuid: UUID) {
+        val intent = Intent(Intents.ACTION_PROFILE_REQUEST_UPDATE)
+            .setComponent(ProfileWorker::class.componentName)
+            .setUUID(uuid)
+
+        context.startForegroundServiceCompat(intent)
     }
 
     companion object {

@@ -189,6 +189,8 @@ object ProfileProcessor {
                         .resolve(snapshot.uuid.toString())
                         .resolve("config.yaml")
                     if (existingConfig.exists() && preCheckUnchanged(context, snapshot.source, existingConfig)) {
+                        existingConfig.setLastModified(System.currentTimeMillis())
+
                         return@processLock
                     }
                 }
@@ -233,11 +235,33 @@ object ProfileProcessor {
                                 .copyRecursively(importedPath)
 
                             context.sendProfileChanged(snapshot.uuid)
+                        } else {
+                            oldConfigFile.setLastModified(System.currentTimeMillis())
                         }
                     }
                 }
             }
         }
+    }
+
+    suspend fun isConfigUnchanged(context: Context, uuid: UUID): Boolean {
+        val snapshot = profileLock.withLock {
+            ImportedDao().queryByUUID(uuid)
+        } ?: return false
+
+        if (snapshot.type != Profile.Type.Url) return false
+
+        val existingConfig = context.importedDir
+            .resolve(snapshot.uuid.toString())
+            .resolve("config.yaml")
+
+        if (!existingConfig.exists()) return false
+
+        if (!preCheckUnchanged(context, snapshot.source, existingConfig)) return false
+
+        existingConfig.setLastModified(System.currentTimeMillis())
+
+        return true
     }
 
     private fun preCheckUnchanged(context: Context, url: String, existingFile: File): Boolean {
@@ -247,6 +271,7 @@ object ProfileProcessor {
             val client = OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
+                .callTimeout(20, TimeUnit.SECONDS)
                 .build()
             val request = Request.Builder()
                 .url(url)
