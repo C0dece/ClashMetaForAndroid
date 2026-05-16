@@ -99,7 +99,7 @@ class ProfileWorker : BaseService() {
             listOf(
                 NotificationChannelCompat.Builder(
                     SERVICE_CHANNEL,
-                    NotificationManagerCompat.IMPORTANCE_LOW
+                    NotificationManagerCompat.IMPORTANCE_MIN
                 ).setName(getString(R.string.profile_service_status)).build(),
                 NotificationChannelCompat.Builder(
                     STATUS_CHANNEL,
@@ -121,6 +121,7 @@ class ProfileWorker : BaseService() {
             .setSmallIcon(R.drawable.ic_logo_service)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFERRED)
             .build()
 
         startForegroundCompat(R.id.nf_profile_worker, notification)
