@@ -2,6 +2,17 @@
 
 A Graphical user interface of [Clash.Meta](https://github.com/MetaCubeX/Clash.Meta) for Android
 
+### Fork Changes
+
+Changes made in this fork compared to the upstream:
+
+- **No notification during profile auto-update** — when a scheduled update fires, the config is downloaded via HTTP and compared with the existing file before starting the foreground service. If the config is unchanged, the update is skipped entirely and no notification appears.
+- **Proxy not interrupted on unchanged config** — Clash core is only reloaded when the remote config actually differs from the local one, preventing active connections from dropping during routine update checks.
+- **Subscription info support** — parses `subscription-userinfo` response header (upload, download, total, expire) and displays traffic usage on the profile card.
+- **`profile-update-interval` header support** — respects the server-provided update interval from the HTTP response header, overriding the manually set interval.
+- **Quick mode switcher** — tap-to-cycle button in the proxy card for switching between Rule / Global / Direct modes without opening the full settings.
+- **Flexible update interval** — minimum auto-update interval lowered to 15 seconds (from the upstream default).
+
 ### Feature
 
 Feature of [Clash.Meta](https://github.com/MetaCubeX/Clash.Meta)
